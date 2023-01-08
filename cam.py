@@ -5,6 +5,7 @@ from datetime import datetime
 camera = cv2.VideoCapture(0)
 
 useGrayScale = False
+flipped = False
 
 # Test function
 def process_click(event, x, y, flags, params):
@@ -45,6 +46,10 @@ while True:
             grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             cv2.imshow("Camera - Gray", grayFrame)
             cv2.imwrite(img_name, grayFrame)
+        elif flipped:
+            flippedFrame = cv2.flip(frame, -1)
+            cv2.imshow(img_name, flippedFrame)
+            cv2.imwrite(img_name, flippedFrame)
         else:
             cv2.imshow("{}".format(img_name), frame)
             cv2.imwrite(img_name, frame)
@@ -57,6 +62,13 @@ while True:
         else:
             useGrayScale = False
             print("Grayscale is off")
+    elif k == ord("2"):
+        if not flipped:
+            flipped = True
+            print("Output will be flipped 180 degrees")
+        else:
+            flipped = False
+            print("Output will have original orientation")
 
 camera.release()
 cv2.destroyAllWindows()
