@@ -32,7 +32,6 @@ while True:
         break
 
     # Display output
-    cv2.putText(frame, str(datetime.now()), (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 2, cv2.LINE_AA)
     cv2.imshow("Camera", frame)
     cv2.imshow('Control', control_image)
 
@@ -42,19 +41,19 @@ while True:
     if k == ord("q"):
         break
     elif k == ord(" "):
+        new_frame = frame
         if useGrayScale:
-            grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            cv2.imshow("Camera - Gray", grayFrame)
-            cv2.imwrite(img_name, grayFrame)
-        elif flipped:
-            flippedFrame = cv2.flip(frame, -1)
-            cv2.imshow(img_name, flippedFrame)
-            cv2.imwrite(img_name, flippedFrame)
-        else:
-            cv2.imshow("{}".format(img_name), frame)
-            cv2.imwrite(img_name, frame)
+            new_frame = cv2.cvtColor(new_frame, cv2.COLOR_BGR2GRAY)
+
+        if flipped:
+            new_frame = cv2.flip(new_frame, -1)
+
+        cv2.putText(new_frame, str(datetime.now()), (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 2, cv2.LINE_AA)
+        cv2.imshow("{}".format(img_name), new_frame)
+        cv2.imwrite(img_name, new_frame)
         print("{} saved in current directory".format(img_name))
         img_counter += 1
+
     elif k == ord("1"):
         if not useGrayScale:
             useGrayScale = True
