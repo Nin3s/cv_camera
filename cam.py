@@ -4,26 +4,11 @@ from datetime import datetime
 
 camera = cv2.VideoCapture(0)
 
+# Various effects
 useGrayScale = False
 flipped = False
 
-# Test function
-def process_click(event, x, y, flags, params):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        if y > button[0] and y < button[1] and x > button[2] and x < button[3]:
-            print("here")
-
 img_counter = 0
-
-# Create a window to apply various effects onto a photo
-cv2.namedWindow("Control")
-cv2.setMouseCallback('Control', process_click)
-
-button = [20,60,50,250]
-
-control_image = np.zeros((80, 300), np.uint8)
-control_image[button[0]:button[1],button[2]:button[3]] = 180
-cv2.putText(control_image, 'Grayscale',(50,50),cv2.FONT_HERSHEY_PLAIN, 2,(0),3)
 
 while True:
     (grabbed, frame) = camera.read()
@@ -33,7 +18,6 @@ while True:
 
     # Display output
     cv2.imshow("Camera", frame)
-    cv2.imshow('Control', control_image)
 
     k = cv2.waitKey(1)
     img_name = "opencv_frame_{}.png".format(img_counter)
