@@ -1,6 +1,8 @@
 # cv_camera
 Camera program written using Python and OpenCV  
-The purpose of this program is to be used with a Raspberry Pi in order to take photos during the NASA Student Launch competition.
+The purpose of this program is to be used with a Raspberry Pi in order to take photos during the NASA Student Launch competition.  
+
+Do take a look at the [current issues](https://github.com/Nin3s/cv_camera/issues) to see what needs to be done (feel free to add more if needed as well)
 
 ## How to run it:
 1. Install python on your system
