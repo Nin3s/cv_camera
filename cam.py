@@ -8,6 +8,8 @@ camera = cv2.VideoCapture(0)
 useGrayScale = False
 flipped = False
 
+# This is just used for naming the files
+# In the future, we can use the timestamp as our file names
 img_counter = 0
 
 while True:
@@ -26,6 +28,7 @@ while True:
         break
     elif k == ord(" "):
         new_frame = frame
+        # These if statements apply the desired effects onto our captured frame (new_frame)
         if useGrayScale:
             new_frame = cv2.cvtColor(new_frame, cv2.COLOR_BGR2GRAY)
 
