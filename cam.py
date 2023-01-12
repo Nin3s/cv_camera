@@ -14,7 +14,7 @@ img_counter = 0
 
 while True:
     (grabbed, frame) = camera.read()
-    frame = cv2.flip(frame, 1)
+    frame = cv2.flip(frame, 1) # Mirrors camera output, feel free to remove if you feel like we should have the unmirrored version
     if not grabbed:
         break
 
@@ -41,6 +41,7 @@ while True:
         print("{} saved in current directory".format(img_name))
         img_counter += 1
 
+    # Toggles effects, print statements are for logging it in the console
     elif k == ord("1"):
         if not useGrayScale:
             useGrayScale = True
