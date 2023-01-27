@@ -43,7 +43,7 @@ while True:
 
             overlay_img = cv2.resize(overlay_img, (640, 480))
 
-            if useGrayScale: # convert to 2 channels
+            if useGrayScale: # convert to 2 channels, program will fail without it
                 b, g, r = cv2.split(overlay_img)
                 img = cv2.merge((b,g,r))
                 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
