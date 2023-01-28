@@ -13,7 +13,7 @@ Do take a look at the [current issues](https://github.com/Nin3s/cv_camera/issues
 `space`: takes a photo  
 `1`: toggle grayscale effect  
 `2`: toggle 180 flip effect  
-`3`: overlay a static image of the bad news gif
+`3`: overlay a static image of the bad news gif  
 `q`: quits and closes the program  
 
 ## Color Channels
