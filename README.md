@@ -13,7 +13,15 @@ Do take a look at the [current issues](https://github.com/Nin3s/cv_camera/issues
 `space`: takes a photo  
 `1`: toggle grayscale effect  
 `2`: toggle 180 flip effect  
+`3`: overlay a static image of the bad news gif
 `q`: quits and closes the program  
+
+## Color Channels
+Images read in opencv using RGB or BGR are read using 3 color channels (red, green, blue). Our opencv program reads images using BGR, which just means the color blue is read in first.  
+
+Converting the image into grayscale turns that 3 channel image into a 2 channel one. That's why if you want to overlay another image, you have to either convert that overlay into a 2 channel, or convert the captured grayscale frame into a 3 channel.  
+
+You can see the different sizes of the images with the `print([image].shape)` that's inserted into the code.  
 
 ## Requirements for NSL:
 1. Add timestamp to photo
