@@ -2,7 +2,9 @@
 Camera program written using Python and OpenCV  
 The purpose of this program is to be used with a Raspberry Pi in order to take photos during the NASA Student Launch competition.  
 
-Do take a look at the [current issues](https://github.com/Nin3s/cv_camera/issues) to see what needs to be done (feel free to add more if needed as well)
+Do take a look at the [current issues](https://github.com/Nin3s/cv_camera/issues) to see what needs to be done (feel free to add more if needed as well)  
+
+NOTE: When using the gif overlay, there is a lag in video output. I do not know if that will affect the camera output on the raspberry pi since we don't actually need video output, but it's something to keep in mind.
 
 ## How to run it:
 1. Install python on your system

@@ -8,10 +8,27 @@ camera = cv2.VideoCapture(0)
 useGrayScale = False
 flipped = False
 overlay = False
+gifOverlay = False
 
 # This is just used for naming the files
 # In the future, we can use the timestamp as our file names
 img_counter = 0
+
+def gifOverlay(frame):
+    print("heehee")
+    gif = cv2.VideoCapture('bad_news.gif')
+
+    while True:
+        ret, gif_frame = gif.read()
+        if not ret:
+            break
+
+    gif_frame = gif_frame.astype('float32')
+
+    result = cv2.addWeighted(frame, 0.7, gif_frame, 0.3, 0)
+
+    cv2.imshow("Gif Capture", result)
+    gif.release()
 
 def takePhoto(frame, name):
     if useGrayScale:
@@ -82,6 +99,13 @@ while True:
         else:
             overlay = False
             print("Overlay inactive")
+    elif k == ord("4"):
+        if not gifOverlay:
+            gifOverlay = True
+            print("gif overlay")
+        else:
+            gifOverlay = False
+            print("no gif overlay")
 
 camera.release()
 cv2.destroyAllWindows()
