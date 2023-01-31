@@ -15,6 +15,14 @@ gifOverlay = False
 # In the future, we can use the timestamp as our file names
 img_counter = 0
 
+def applyFilters(frame):
+    if useGrayScale:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    if flipped:
+        frame = cv2.flip(frame, -1)
+
+    return frame
+
 def doGifOverlay(frame, now):
     gif = cv2.VideoCapture('bad_news.gif')
 
@@ -28,11 +36,8 @@ def doGifOverlay(frame, now):
         overlay = cv2.addWeighted(gif_frame, 0.3, frame, 0.5, 0)
 
         # Check if other effects are on
-        if useGrayScale:
-            overlay = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
-            
-        if flipped:
-            overlay = cv2.flip(overlay, -1)
+        overlay = applyFilters(overlay)
+
         cv2.putText(overlay, now, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
         frames.append(overlay)
 
@@ -45,11 +50,7 @@ def takePhoto(frame, name):
     if gifOverlay:
         doGifOverlay(frame, curr_time)
     else:
-        if useGrayScale:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        if flipped:
-            frame = cv2.flip(frame, -1)
+        frame = applyFilters(frame)
 
         if useOverlay:
             overlay_img = cv2.imread('bad_news_img.png', cv2.COLOR_BGR2GRAY)

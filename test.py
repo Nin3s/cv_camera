@@ -8,7 +8,6 @@ gifOverlay = False
 camera = cv2.VideoCapture(0)
 
 def doGifOverlay(new_frame):
-    print("heehee")
     gif = cv2.VideoCapture('bad_news.gif')
 
     frames = []
