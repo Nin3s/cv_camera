@@ -42,9 +42,9 @@ def doGifOverlay(frame, now):
         frames.append(overlay)
 
     frames_pil = [Image.fromarray(f) for f in frames]
-    frames_pil[0].save("opencv_frame_{}.gif".format(img_counter), save_all=True, append_images=frames_pil[1:], loop=0)
+    frames_pil[0].save("{}_opencv_gif.gif".format(img_counter), save_all=True, append_images=frames_pil[1:], loop=0)
 
-def takePhoto(frame, name):
+def takePhoto(frame):
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     if gifOverlay:
@@ -64,9 +64,8 @@ def takePhoto(frame, name):
                 frame = cv2.addWeighted(frame, 0.7, overlay_img, 0.4, 0)
 
         cv2.putText(frame, curr_time, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
-        cv2.imshow("{}".format(name), frame)
-        cv2.imwrite(name, frame)
-        print("{} saved in current directory".format(name))
+        cv2.imshow("{}_opencv_img.png".format(img_counter), frame)
+        cv2.imwrite("{}_opencv_img.png".format(img_counter), frame)
 
 while True:
     (grabbed, frame) = camera.read()
@@ -78,13 +77,13 @@ while True:
     cv2.imshow("Camera", frame)
 
     k = cv2.waitKey(1)
-    img_name = "opencv_frame_{}.png".format(img_counter)
+    #img_name = "opencv_frame_{}.png".format(img_counter)
     
     if k == ord("q"):
         break
     elif k == ord(" "):
         new_frame = frame
-        takePhoto(new_frame, img_name)
+        takePhoto(new_frame)
         img_counter += 1
 
     # Toggles effects, print statements are for logging it in the console
