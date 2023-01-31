@@ -25,7 +25,7 @@ def doGifOverlay(frame, now):
             break
 
         gif_frame = cv2.resize(gif_frame, (frame.shape[1], frame.shape[0]))
-        overlay = cv2.addWeighted(gif_frame, 0.5, frame, 0.5, 0)
+        overlay = cv2.addWeighted(gif_frame, 0.3, frame, 0.5, 0)
 
         # Check if other effects are on
         if useGrayScale:
