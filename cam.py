@@ -8,7 +8,7 @@ camera = cv2.VideoCapture(0)
 # Various effects, global variables
 useGrayScale = False
 flipped = False
-overlay = False
+useOverlay = False
 gifOverlay = False
 
 # This is just used for naming the files
@@ -26,14 +26,13 @@ def doGifOverlay(frame, now):
 
         gif_frame = cv2.resize(gif_frame, (new_frame.shape[1], new_frame.shape[0]))
         overlay = cv2.addWeighted(gif_frame, 0.5, new_frame, 0.5, 0)
-        cv2.putText(overlay, now, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
 
         # Check if other effects are on
         if useGrayScale:
             overlay = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
         if flipped:
             overlay = cv2.flip(overlay, -1)
-
+        cv2.putText(overlay, now, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
         frames.append(overlay)
 
     frames_pil = [Image.fromarray(frame) for frame in frames]
@@ -48,7 +47,7 @@ def takePhoto(frame, name):
     if flipped:
         frame = cv2.flip(frame, -1)
 
-    if overlay:
+    if useOverlay:
         overlay_img = cv2.imread('bad_news_img.png', cv2.COLOR_BGR2GRAY)
 
         overlay_img = cv2.resize(overlay_img, (640, 480))
@@ -104,18 +103,18 @@ while True:
             flipped = False
             print("Output will have original orientation")
     elif k == ord("3"):
-        if not overlay:
-            overlay = True
+        if not useOverlay:
+            useOverlay = True
             gifOverlay = False
             print("Overlay active")
             print("Gif overlay inactive")
         else:
-            overlay = False
+            useOverlay = False
             print("Overlay inactive")
     elif k == ord("4"):
         if not gifOverlay:
             gifOverlay = True
-            overlay = False
+            useOverlay = False
             print("Gif overlay active")
             print("Static overlay inactive")
         else:
