@@ -106,17 +106,21 @@ while True:
     elif k == ord("3"):
         if not overlay:
             overlay = True
+            gifOverlay = False
             print("Overlay active")
+            print("Gif overlay inactive")
         else:
             overlay = False
             print("Overlay inactive")
     elif k == ord("4"):
         if not gifOverlay:
             gifOverlay = True
-            print("gif overlay")
+            overlay = False
+            print("Gif overlay active")
+            print("Static overlay inactive")
         else:
             gifOverlay = False
-            print("no gif overlay")
+            print("Gif overlay inactive")
 
 camera.release()
 cv2.destroyAllWindows()
