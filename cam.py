@@ -24,50 +24,44 @@ def doGifOverlay(frame, now):
         if not ret:
             break
 
-        gif_frame = cv2.resize(gif_frame, (new_frame.shape[1], new_frame.shape[0]))
-        overlay = cv2.addWeighted(gif_frame, 0.5, new_frame, 0.5, 0)
+        gif_frame = cv2.resize(gif_frame, (frame.shape[1], frame.shape[0]))
+        overlay = cv2.addWeighted(gif_frame, 0.5, frame, 0.5, 0)
 
         # Check if other effects are on
         if useGrayScale:
             overlay = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
+            
         if flipped:
             overlay = cv2.flip(overlay, -1)
         cv2.putText(overlay, now, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
         frames.append(overlay)
 
-    frames_pil = [Image.fromarray(frame) for frame in frames]
+    frames_pil = [Image.fromarray(f) for f in frames]
     frames_pil[0].save("opencv_frame_{}.gif".format(img_counter), save_all=True, append_images=frames_pil[1:], loop=0)
-
-def convertToGS(overlay_img):
-    b,g,r = cv2.split(overlay_img)
-    img = cv2.merge((b,g,r))
-    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    return gray_img
-
 
 def takePhoto(frame, name):
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    if useGrayScale:
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    if flipped:
-        frame = cv2.flip(frame, -1)
-
-    if useOverlay:
-        overlay_img = cv2.imread('bad_news_img.png', cv2.COLOR_BGR2GRAY)
-
-        overlay_img = cv2.resize(overlay_img, (640, 480))
-
-        if useGrayScale: # convert to 2 channels, program will fail without it, see Color Channels in the README for more
-            gray_img = convertToGS(overlay_img)
-            frame = cv2.addWeighted(frame, 0.4, gray_img, 0.7, 0)
-        else:
-            frame = cv2.addWeighted(frame, 0.7, overlay_img, 0.4, 0)
-
+    
     if gifOverlay:
         doGifOverlay(frame, curr_time)
     else:
+        if useGrayScale:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        if flipped:
+            frame = cv2.flip(frame, -1)
+
+        if useOverlay:
+            overlay_img = cv2.imread('bad_news_img.png', cv2.COLOR_BGR2GRAY)
+
+            overlay_img = cv2.resize(overlay_img, (640, 480))
+
+            if useGrayScale: # convert to 2 channels, program will fail without it, see Color Channels in the README for more
+                gray_img = cv2.cvtColor(overlay_img, cv2.COLOR_BGR2GRAY)
+                frame = cv2.addWeighted(frame, 0.4, gray_img, 0.7, 0)
+            else:
+                frame = cv2.addWeighted(frame, 0.7, overlay_img, 0.4, 0)
+
         cv2.putText(frame, curr_time, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
         cv2.imshow("{}".format(name), frame)
         cv2.imwrite(name, frame)
