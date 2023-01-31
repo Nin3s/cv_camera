@@ -36,7 +36,7 @@ def doGifOverlay(frame, now):
         frames.append(overlay)
 
     frames_pil = [Image.fromarray(frame) for frame in frames]
-    frames_pil[0].save("test.gif", save_all=True, append_images=frames_pil[1:], loop=0)
+    frames_pil[0].save("opencv_frame_{}.gif".format(img_counter), save_all=True, append_images=frames_pil[1:], loop=0)
 
 
 def takePhoto(frame, name):
