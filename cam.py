@@ -27,23 +27,29 @@ def doGifOverlay(frame, now):
         gif_frame = cv2.resize(gif_frame, (new_frame.shape[1], new_frame.shape[0]))
         overlay = cv2.addWeighted(gif_frame, 0.5, new_frame, 0.5, 0)
         cv2.putText(overlay, now, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
+
+        # Check if other effects are on
+        if useGrayScale:
+            overlay = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY)
+        if flipped:
+            overlay = cv2.flip(overlay, -1)
+
         frames.append(overlay)
 
     frames_pil = [Image.fromarray(frame) for frame in frames]
     frames_pil[0].save("test.gif", save_all=True, append_images=frames_pil[1:], loop=0)
 
+
 def takePhoto(frame, name):
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if useGrayScale:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        print(frame.shape)
 
     if flipped:
         frame = cv2.flip(frame, -1)
 
     if overlay:
         overlay_img = cv2.imread('bad_news_img.png', cv2.COLOR_BGR2GRAY)
-        print(overlay_img.shape)
 
         overlay_img = cv2.resize(overlay_img, (640, 480))
 
@@ -57,12 +63,11 @@ def takePhoto(frame, name):
 
     if gifOverlay:
         doGifOverlay(frame, curr_time)
-
-    cv2.putText(frame, str(datetime.now()), (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
-    cv2.imshow("{}".format(name), frame)
-    cv2.imwrite(name, frame)
-    print("{} saved in current directory".format(name))
-
+    else:
+        cv2.putText(frame, curr_time, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
+        cv2.imshow("{}".format(name), frame)
+        cv2.imwrite(name, frame)
+        print("{} saved in current directory".format(name))
 
 while True:
     (grabbed, frame) = camera.read()
