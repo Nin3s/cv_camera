@@ -8,8 +8,9 @@ NOTE: When using the gif overlay, there is a lag in video output. I do not know 
 
 ## How to run it:
 1. Install python on your system
-2. Install opencv-python with the command `pip install opencv-python`
-3. To run it, type in `python cam.py` into the terminal
+2. Install opencv-python with the command `pip install opencv-python`  
+3. Instal Pillow with `pip install pillow`  
+4. To run it, type in `python cam.py` into the terminal
 
 ## Button Inputs for Testing Purposes:
 `space`: takes a photo  
