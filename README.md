@@ -15,7 +15,9 @@ NOTE: When using the gif overlay, there is a lag in video output. I do not know 
 `space`: takes a photo  
 `1`: toggle grayscale effect  
 `2`: toggle 180 flip effect  
-`3`: overlay a static image of the bad news gif
+`3`: overlay a gif image of the bad news gif  
+`4`: static overlay (not needed but just in case gif overlay ends up falling through)  
+`5`: clears all effects  
 `q`: quits and closes the program  
 
 ## Color Channels

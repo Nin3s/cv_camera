@@ -85,7 +85,6 @@ while True:
         new_frame = frame
         takePhoto(new_frame)
         img_counter += 1
-
     # Toggles effects, print statements are for logging it in the console
     elif k == ord("1"):
         if not useGrayScale:
@@ -101,7 +100,7 @@ while True:
         else:
             flipped = False
             print("Output will have original orientation")
-    elif k == ord("3"):
+    elif k == ord("3"): # gif overlay
         if not useOverlay:
             useOverlay = True
             gifOverlay = False
@@ -110,7 +109,7 @@ while True:
         else:
             useOverlay = False
             print("Overlay inactive")
-    elif k == ord("4"):
+    elif k == ord("4"): # static overlay (not needed, but here just in case we can't use gif overlay)
         if not gifOverlay:
             gifOverlay = True
             useOverlay = False
@@ -119,6 +118,14 @@ while True:
         else:
             gifOverlay = False
             print("Gif overlay inactive")
+    elif k == ord("5"):
+        print("Clearing all active effects...\n")
+        useGrayScale = False
+        flipped = False
+        useOverlay = False
+        gifOverlay = False
+        print("Cleared.")
+
 
 camera.release()
 cv2.destroyAllWindows()
