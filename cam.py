@@ -16,6 +16,9 @@ gifOverlay = False
 img_counter = 0
 
 def applyFilters(frame):
+    global useGrayScale
+    global flipped
+
     if useGrayScale:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     if flipped:
@@ -24,6 +27,10 @@ def applyFilters(frame):
     return frame
 
 def doGifOverlay(frame, now):
+
+    global gifOverlay
+    global img_counter
+
     gif = cv2.VideoCapture('bad_news.gif')
 
     frames = []
@@ -45,6 +52,12 @@ def doGifOverlay(frame, now):
     frames_pil[0].save("{}_opencv_gif.gif".format(img_counter), save_all=True, append_images=frames_pil[1:], loop=0)
 
 def takePhoto(frame):
+    global useGrayScale
+    global flipped
+    global useOverlay
+    global gifOverlay
+    global img_counter
+    
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     if gifOverlay:
@@ -67,65 +80,89 @@ def takePhoto(frame):
         cv2.imshow("{}_opencv_img.png".format(img_counter), frame)
         cv2.imwrite("{}_opencv_img.png".format(img_counter), frame)
 
-while True:
-    (grabbed, frame) = camera.read()
-    frame = cv2.flip(frame, 1) # Mirrors camera output, feel free to remove if you feel like we should have the unmirrored version
-    if not grabbed:
-        break
+def runCamera():
+    global useGrayScale
+    global flipped
+    global useOverlay
+    global gifOverlay
+    global img_counter
+    while True:
+        (grabbed, frame) = camera.read()
+        frame = cv2.flip(frame, 1) # Mirrors camera output, feel free to remove if you feel like we should have the unmirrored version
+        if not grabbed:
+            break
 
-    # Display output
-    cv2.imshow("Camera", frame)
+        # Display output
+        cv2.imshow("Camera", frame)
 
-    k = cv2.waitKey(1)
-    #img_name = "opencv_frame_{}.png".format(img_counter)
-    
-    if k == ord("q"):
-        break
-    elif k == ord(" "):
-        new_frame = frame
-        takePhoto(new_frame)
-        img_counter += 1
-    # Toggles effects, print statements are for logging it in the console
-    elif k == ord("1"):
-        if not useGrayScale:
-            useGrayScale = True
-            print("Grayscale is on")
-        else:
+        k = cv2.waitKey(1)
+        #img_name = "opencv_frame_{}.png".format(img_counter)
+        
+        if k == ord("q"):
+            break
+        elif k == ord(" "):
+            new_frame = frame
+            takePhoto(new_frame)
+            img_counter += 1
+        # Toggles effects, print statements are for logging it in the console
+        elif k == ord("1"):
+            if not useGrayScale:
+                useGrayScale = True
+                print("Grayscale is on")
+            else:
+                useGrayScale = False
+                print("Grayscale is off")
+        elif k == ord("2"):
+            if not flipped:
+                flipped = True
+                print("Output will be flipped 180 degrees")
+            else:
+                flipped = False
+                print("Output will have original orientation")
+        elif k == ord("3"): # gif overlay
+            if not useOverlay:
+                useOverlay = True
+                gifOverlay = False
+                print("Overlay active")
+                print("Gif overlay inactive")
+            else:
+                useOverlay = False
+                print("Overlay inactive")
+        elif k == ord("4"): # static overlay (not needed, but here just in case we can't use gif overlay)
+            if not gifOverlay:
+                gifOverlay = True
+                useOverlay = False
+                print("Gif overlay active")
+                print("Static overlay inactive")
+            else:
+                gifOverlay = False
+                print("Gif overlay inactive")
+        elif k == ord("5"):
+            print("Clearing all active effects...\n")
             useGrayScale = False
-            print("Grayscale is off")
-    elif k == ord("2"):
-        if not flipped:
-            flipped = True
-            print("Output will be flipped 180 degrees")
-        else:
             flipped = False
-            print("Output will have original orientation")
-    elif k == ord("3"): # gif overlay
-        if not useOverlay:
-            useOverlay = True
-            gifOverlay = False
-            print("Overlay active")
-            print("Gif overlay inactive")
-        else:
             useOverlay = False
-            print("Overlay inactive")
-    elif k == ord("4"): # static overlay (not needed, but here just in case we can't use gif overlay)
-        if not gifOverlay:
-            gifOverlay = True
-            useOverlay = False
-            print("Gif overlay active")
-            print("Static overlay inactive")
-        else:
             gifOverlay = False
-            print("Gif overlay inactive")
-    elif k == ord("5"):
-        print("Clearing all active effects...\n")
-        useGrayScale = False
-        flipped = False
-        useOverlay = False
-        gifOverlay = False
-        print("Cleared.")
+            print("Cleared.")
 
 
-camera.release()
-cv2.destroyAllWindows()
+    camera.release()
+    cv2.destroyAllWindows()
+
+def main():
+    global useGrayScale
+    global flipped
+    global useOverlay
+    global gifOverlay
+    global img_counter
+
+    # useGrayScale = False
+    # flipped = False
+    # useOverlay = False
+    # gifOverlay = False
+    # img_counter = 0
+
+    runCamera()
+    
+
+if __name__ == "__main__": main()
