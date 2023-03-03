@@ -4,7 +4,13 @@ The purpose of this program is to be used with a Raspberry Pi in order to take p
 
 Do take a look at the [current issues](https://github.com/Nin3s/cv_camera/issues) to see what needs to be done (feel free to add more if needed as well)  
 
-NOTE: When using the gif overlay, there is a lag in video output. I do not know if that will affect the camera output on the raspberry pi since we don't actually need video output, but it's something to keep in mind.
+NOTE: When using the gif overlay, there is a lag in video output. I do not know if that will affect the camera output on the raspberry pi since we don't actually need video output, but it's something to keep in mind.  
+
+For running git commands, [see here](https://www.nobledesktop.com/learn/git/git-branches)  
+Typically, you'll want to use `git fetch origin main` and `git pull` to update your local repo from the current one.  
+To merge onto main, save your commits onto a separate branch and push it to the repo, then create a pull request  
+
+Tip: If you have VSCode installed, you can type in `code .` in the file directory in the command line and immediately open the repo that way.  
 
 ## How to run it:
 1. Install python on your system
