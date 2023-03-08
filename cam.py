@@ -64,7 +64,7 @@ def takePhoto(frame):
     global img_counter
     
     #curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    curr_time = rtc.datetime
+    curr_time = rtc.datetime.strftime("%Y-%m-%d %H:%M:%S")
     
     if gifOverlay:
         doGifOverlay(frame, curr_time)
