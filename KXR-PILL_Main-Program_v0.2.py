@@ -6,7 +6,6 @@ The following code is proprietary to Knights Experimental Rocketry
 '''
 print("KXR-PILL_Main-Program Running...")
 
-import smbus2
 import adafruit_bno055
 import board
 import cv2
@@ -20,7 +19,7 @@ import time
 camera = cv2.VideoCapture(0)
 
 if camera.isOpened() == False:
-    print("ERROR: Camera is not operational")
+    print("ERROR: Dawn has not been prepped")
 else:
     print("INFO: Camera is functioning")
 
@@ -35,10 +34,9 @@ gifOverlay = False
 img_counter = 0
 i = 0
 
-i2c = board.I2C()
+i2c = board.I2C()  # uses board.SCL and board.SDA
 sensor = adafruit_bno055.BNO055_I2C(i2c)
-BNO = 0x29
-bus = smbus2.SMBus(1)
+last_val = 0xFFFF
 
 cam_servo = AngularServo(18, min_angle=-90, max_angle=90, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
 cam_servo.angle = -90
@@ -179,8 +177,11 @@ def runCamera():
         new_frame = frame
         takePhoto(new_frame)
         img_counter += 1
+        i += 1
 
-        time.sleep(30)
+        turnto_camera(-90 + (i*30))
+
+        time.sleep(5)
 
 
     camera.release()
@@ -206,47 +207,63 @@ def turnto_camera(deg):
 
 def bootUpTest():
     #prints results from POST test on BNO055, telling the user if everything is working or not
-    boot_test = bus.read_byte_data(BNO, 0x36)
-    print("BNO055 Boot Test", boot_test)
+    print("BNO055 Boot Test")
+    print("Accelerometer (m/s^2): {}".format(sensor.acceleration))
     time.sleep(2)
     print("Prepare for servo test...")
     time.sleep(2)
     elevator_up()
     turnto_camera(-60)
-    turnto_camera(-30)
-    turnto_camera(0)
-    turnto_camera(30)
-    turnto_camera(60)
-    turnto_camera(90)
+    turnto_camera(-90)
     elevator_down()
 
 def preLaunch():
     #reads accelertion until a large spike to recognize launch and thus beginning of launch, then breaks out of loop
-    while (True):
-        accel = sensor._acceleration
-        if accel > 10:
-            print("Launch Began!")
+    while True:
+   
+        x = sensor.acceleration[0]
+        y = sensor.acceleration[1]
+        z = sensor.acceleration[2]
+        
+        #print(x, y, z)
+        #print("Accelerometer (m/s^2): {}".format(sensor.acceleration))
+
+        def fast_accel():
+            try:
+                if (abs(z) > 25):
+                    return True
+                else:
+                    return False
+            except:
+                print("!!!!!!!!!! NoneType error found")
+
+        
+        def launch_detected():
+                
+            i = 0    
+            while( i < 10):
+                
+                if not (fast_accel()):
+                    return False
+                    
+                time.sleep(0.05)
+                i += 1
+                
+            return True    
+            
+        if launch_detected():
+            #print("Accelerometer (m/s^2): {}".format(sensor.acceleration))
+            print(x, y, z)
+            print("Accelerating !!!!!")
             break
+        
+        time.sleep(0.1)
 
 def midLaunch():
-    #reads acceleration until it becomes negative (changes direction) and thus reaches apogee, then break out of loop
-    while (True):
-        accel = sensor._acceleration
-        if accel < 0:
-            print("Apogee Reached!")
-            break
+    time.sleep(120)
     
 def endLaunch():
-    #reads acceleration and orientation until the acceleration and change in orientation are close to zero, then breaks out of loop
-    while (True):
-        data = [sensor.acceleration, sensor.gyro]
-        if abs(data[0]) < 0.3 and abs(data[1]) < 0.3:
-            print("Deploying PILL Camera!")
-            elevator_up()
-            break
-
-
-if __name__ == "__main__": main()
+    print("Launch Complete")
 
 def main():
     bootUpTest() #boot up test results
@@ -254,6 +271,5 @@ def main():
     midLaunch() #determines when rocket reaches apogee
     endLaunch() #determines when PILL stops moving and rotating
     runCamera()
-
 
 if __name__ == "__main__": main()
