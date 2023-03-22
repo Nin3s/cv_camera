@@ -1,9 +1,13 @@
 import cv2
-import numpy as np
 from datetime import datetime
 from PIL import Image
+import adafruit_ds3231
+import time
+import board
 
 camera = cv2.VideoCapture(0)
+i2c = board.I2C()
+rtc = adafruit_ds3231(i2c)
 
 # Various effects, global variables
 useGrayScale = False
@@ -14,6 +18,7 @@ gifOverlay = False
 # This is just used for naming the files
 # In the future, we can use the timestamp as our file names
 img_counter = 0
+
 
 def applyFilters(frame):
     global useGrayScale
@@ -58,7 +63,8 @@ def takePhoto(frame):
     global gifOverlay
     global img_counter
     
-    curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    curr_time = rtc.datetime.strftime("%Y-%m-%d %H:%M:%S")
     
     if gifOverlay:
         doGifOverlay(frame, curr_time)
@@ -155,12 +161,6 @@ def main():
     global useOverlay
     global gifOverlay
     global img_counter
-
-    # useGrayScale = False
-    # flipped = False
-    # useOverlay = False
-    # gifOverlay = False
-    # img_counter = 0
 
     runCamera()
     

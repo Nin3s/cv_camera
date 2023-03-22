@@ -14,9 +14,8 @@ Tip: If you have VSCode installed, you can type in `code .` in the file director
 
 ## How to run it:
 1. Install python on your system
-2. Install opencv-python with the command `pip install opencv-python`  
-3. Instal Pillow with `pip install pillow`  
-4. To run it, type in `python cam.py` into the terminal
+2. Install required python packages with `pip install -r init.txt`  
+3. To run it, type in `python cam.py` into the terminal
 
 ## Button Inputs for Testing Purposes:
 `space`: takes a photo  
