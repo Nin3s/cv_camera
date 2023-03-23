@@ -39,7 +39,7 @@ sensor = adafruit_bno055.BNO055_I2C(i2c)
 last_val = 0xFFFF
 
 cam_servo = AngularServo(18, min_angle=-90, max_angle=90, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
-cam_servo.angle = -90
+cam_servo.angle = 90
 print(cam_servo.angle)
 
 cont_servo = Servo(12)
@@ -109,6 +109,7 @@ def takePhoto(frame):
         cv2.putText(frame, curr_time, (20, 40), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 2, cv2.LINE_AA)
         cv2.imshow("{}_opencv_img.png".format(img_counter), frame)
         cv2.imwrite("{}_opencv_img.png".format(img_counter), frame)
+        print("Saved Image")
 
 def runCamera():
     global useGrayScale
@@ -119,7 +120,8 @@ def runCamera():
     global i
     while True:
         (grabbed, frame) = camera.read()
-        frame = cv2.flip(frame, 1) # Mirrors camera output, feel free to remove if you feel like we should have the unmirrored version
+        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+        #frame = cv2.flip(frame, 1) # Mirrors camera output, feel free to remove if you feel like we should have the unmirrored version
         if not grabbed:
             break
 
@@ -156,6 +158,7 @@ def runCamera():
             else:
                 useOverlay = False
                 print("Overlay inactive")
+            
         elif i == 4: # static overlay (not needed, but here just in case we can't use gif overlay)
             if not gifOverlay:
                 gifOverlay = True
@@ -163,9 +166,9 @@ def runCamera():
                 print("Gif overlay active")
                 print("Static overlay inactive")
             else:
-                gifOverlay = False
-                print("Gif overlay inactive")
-        elif i == 5:
+               gifOverlay = False
+               print("Gif overlay inactive")
+        elif i == 3:
             print("Clearing all active effects...\n")
             useGrayScale = False
             flipped = False
@@ -176,10 +179,11 @@ def runCamera():
 
         new_frame = frame
         takePhoto(new_frame)
-        img_counter += 1
         i += 1
+        img_counter += 1
+        print(i)
 
-        turnto_camera(-90 + (i*30))
+        turnto_camera(90 - (i*30))
 
         time.sleep(5)
 
@@ -193,11 +197,11 @@ def control_elevator(delay, speed):
     cont_servo.detach()
     
 def elevator_up():
-    control_elevator(5, -1)
+    control_elevator(5.3, -1)
     print("Raising Elevator")
     
 def elevator_down():
-    control_elevator(5, 1)
+    control_elevator(5.3, 1)
     print("Lowering Elevator")
 
 def turnto_camera(deg):
@@ -213,9 +217,12 @@ def bootUpTest():
     print("Prepare for servo test...")
     time.sleep(2)
     elevator_up()
-    turnto_camera(-60)
-    turnto_camera(-90)
+    turnto_camera(60)
+    turnto_camera(90)
     elevator_down()
+    cam_servo.detach()
+
+    print("Ready for launch - dawn has been prepped")
 
 def preLaunch():
     #reads accelertion until a large spike to recognize launch and thus beginning of launch, then breaks out of loop
@@ -255,15 +262,21 @@ def preLaunch():
             #print("Accelerometer (m/s^2): {}".format(sensor.acceleration))
             print(x, y, z)
             print("Accelerating !!!!!")
+            Outfile=open("output.txt","a+")
+            Outfile.write(str(z))
+            Outfile.close()
             break
         
         time.sleep(0.1)
 
 def midLaunch():
+    #!!! time to wait before deploy, MUST BE 120 FOR LAUNCH
     time.sleep(120)
     
 def endLaunch():
     print("Launch Complete")
+    elevator_up()
+    print("Deploying Camera")
 
 def main():
     bootUpTest() #boot up test results
